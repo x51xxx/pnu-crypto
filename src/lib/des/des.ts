@@ -8,12 +8,6 @@ class DESState {
     keys = new Array(0);
 }
 
-const shiftTable = [
-    1, 1, 2, 2, 2, 2, 2, 2,
-    1, 2, 2, 2, 2, 2, 2, 1
-];
-
-
 export class DES {
     protected type?: CipherType;
     protected blockSize = 8;
@@ -21,6 +15,11 @@ export class DES {
     protected bufferOff = 0;
 
     protected _desState: DESState;
+
+    private static SHIFT_TABLE: number[] = [
+        1, 1, 2, 2, 2, 2, 2, 2,
+        1, 2, 2, 2, 2, 2, 2, 1
+    ];
 
     constructor(protected options: CipherOptions) {
         this.type = this.options.type;
@@ -47,7 +46,7 @@ export class DES {
         kL = state.tmp[0];
         kR = state.tmp[1];
         for (let i = 0; i < state.keys.length; i += 2) {
-            let shift = shiftTable[i >>> 1];
+            let shift = DES.SHIFT_TABLE[i >>> 1];
 
             kL = utils.r28shl(kL, shift);
             kR = utils.r28shl(kR, shift);
@@ -146,7 +145,6 @@ export class DES {
         // Reverse Initial Permutation
         utils.rip(l, r, out, off);
     }
-
 
     update(data: BinaryLike): number[] {
         if (data.length === 0)

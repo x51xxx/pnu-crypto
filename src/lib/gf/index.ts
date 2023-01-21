@@ -10,3 +10,23 @@ export function mul02(a: number){
 export function mul03(a: number) {
     return mul02(a) ^ a;
 }
+
+export function gmul02(a: number, b: number) {
+    let p = 0;
+    let highBit = 0;
+
+    for (let i = 0; i < 8; i++) {
+        if (b & 1) {
+            p ^= a;
+        }
+
+        highBit = a & 0x80;
+        a <<= 1;
+        if (highBit) {
+            a ^= 0x1b;
+        }
+        b >>= 1;
+    }
+
+    return p;
+}
